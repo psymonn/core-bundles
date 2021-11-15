@@ -6,3 +6,36 @@ helm:
   #chart: rancher-kiali-server
   chart: rancher-istio
   version: 100.0.2+up1.10.4
+  values:
+    cni:
+      enabled: true
+    ingressGateways:
+      enabled: true
+    tracing:
+      enabled: true
+    overlayFile: |-
+      apiVersion: install.istio.io/v1alpha1
+      kind: IstioOperator
+      spec:
+        components:
+          cni:
+            enabled: true
+            k8s:
+              overlays:
+              - apiVersion: "apps/v1"
+                kind: "DaemonSet"
+                name: "istio-cni-node"
+                patches:
+                - path: spec.template.spec.containers.[name:install-cni].securityContext.privileged
+                  value: true
+        values:
+          cni:
+            image: rancher/mirrored-istio-install-cni:1.10.4
+            excludeNamespaces:
+            - istio-system
+            - kube-system
+            logLevel: info
+            cniBinDir: /opt/cni/bin
+            cniConfDir: /etc/cni/net.d
+dependsOn:
+  - name: rancher-monitoring

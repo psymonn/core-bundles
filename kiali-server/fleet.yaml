@@ -1,6 +1,8 @@
 defaultNamespace: istio-system
 helm:
-  releaseName: rancher-kiali-server
+  #releaseName: rancher-kiali-server
+  releaseName: rancher-istio
   repo: https://charts.rancher.io
-  chart: rancher-kiali-server
-  version: 1.32.100
+  #chart: rancher-kiali-server
+  chart: rancher-istio
+  version: 100.0.2+up1.10.4
